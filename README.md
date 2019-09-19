@@ -15,7 +15,7 @@ Otherwise it will be automatically added as submodule by the Makefile
 
 ### MKL
 See your distribution documentation
-* Archlinux: `yay -S intel-mkl`
+* Archlinux: `yay -S intel-mkl openmp`
 
 ### Openblas
 See your distribution documentation
