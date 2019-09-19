@@ -1,0 +1,104 @@
+2019-09-19 15:44:25
+Running ./bench
+Run on (8 X 3400 MHz CPU s)
+CPU Caches:
+  L1 Data 32K (x4)
+  L1 Instruction 32K (x4)
+  L2 Unified 256K (x4)
+  L3 Unified 6144K (x1)
+Load Average: 1.20, 1.23, 1.27
+***WARNING*** CPU scaling is enabled, the benchmark real time measurements may be noisy and will incur extra overhead.
+***WARNING*** Library was built as DEBUG. Timings may be affected.
+------------------------------------------------------------------------------------------
+Benchmark                                                Time             CPU   Iterations
+------------------------------------------------------------------------------------------
+BM_gemm_blasfeo/2/2/2/64_mean                          248 ns          248 ns            5
+BM_gemm_blasfeo/2/2/2/64_median                        283 ns          283 ns            5
+BM_gemm_blasfeo/2/2/2/64_stddev                        208 ns          208 ns            5
+BM_gemm_blasfeo/3/3/3/64_mean                         53.0 ns         53.0 ns            5
+BM_gemm_blasfeo/3/3/3/64_median                       37.3 ns         37.3 ns            5
+BM_gemm_blasfeo/3/3/3/64_stddev                       24.2 ns         24.2 ns            5
+BM_gemm_blasfeo/5/5/5/64_mean                         1677 ns         1676 ns            5
+BM_gemm_blasfeo/5/5/5/64_median                       2021 ns         2020 ns            5
+BM_gemm_blasfeo/5/5/5/64_stddev                        746 ns          745 ns            5
+BM_gemm_blasfeo/10/10/10/64_mean                      2670 ns         2668 ns            5
+BM_gemm_blasfeo/10/10/10/64_median                    2745 ns         2743 ns            5
+BM_gemm_blasfeo/10/10/10/64_stddev                     109 ns          109 ns            5
+BM_gemm_blasfeo/20/20/20/64_mean                       496 ns          496 ns            5
+BM_gemm_blasfeo/20/20/20/64_median                     496 ns          496 ns            5
+BM_gemm_blasfeo/20/20/20/64_stddev                    8.24 ns         8.19 ns            5
+BM_gemm_blasfeo/30/30/30/64_mean                      4731 ns         4728 ns            5
+BM_gemm_blasfeo/30/30/30/64_median                    1609 ns         1608 ns            5
+BM_gemm_blasfeo/30/30/30/64_stddev                    4292 ns         4289 ns            5
+BM_gemm_blasfeo/2/2/2/4096_mean                       32.6 ns         32.6 ns            5
+BM_gemm_blasfeo/2/2/2/4096_median                     32.6 ns         32.5 ns            5
+BM_gemm_blasfeo/2/2/2/4096_stddev                    0.156 ns        0.154 ns            5
+BM_gemm_blasfeo/3/3/3/4096_mean                       34.0 ns         34.0 ns            5
+BM_gemm_blasfeo/3/3/3/4096_median                     34.0 ns         33.9 ns            5
+BM_gemm_blasfeo/3/3/3/4096_stddev                    0.175 ns        0.172 ns            5
+BM_gemm_blasfeo/5/5/5/4096_mean                        107 ns          107 ns            5
+BM_gemm_blasfeo/5/5/5/4096_median                      106 ns          106 ns            5
+BM_gemm_blasfeo/5/5/5/4096_stddev                     1.31 ns         1.30 ns            5
+BM_gemm_blasfeo/10/10/10/4096_mean                     132 ns          132 ns            5
+BM_gemm_blasfeo/10/10/10/4096_median                   132 ns          132 ns            5
+BM_gemm_blasfeo/10/10/10/4096_stddev                  1.27 ns         1.26 ns            5
+BM_gemm_blasfeo/20/20/20/4096_mean                     479 ns          479 ns            5
+BM_gemm_blasfeo/20/20/20/4096_median                   480 ns          480 ns            5
+BM_gemm_blasfeo/20/20/20/4096_stddev                  1.70 ns         1.68 ns            5
+BM_gemm_blasfeo/30/30/30/4096_mean                    4060 ns         4057 ns            5
+BM_gemm_blasfeo/30/30/30/4096_median                  4060 ns         4057 ns            5
+BM_gemm_blasfeo/30/30/30/4096_stddev                  6.17 ns         6.18 ns            5
+BM_gemm_blasfeo_reuse_memory/2/2/2/64_mean            33.0 ns         32.9 ns            5
+BM_gemm_blasfeo_reuse_memory/2/2/2/64_median          32.9 ns         32.9 ns            5
+BM_gemm_blasfeo_reuse_memory/2/2/2/64_stddev         0.201 ns        0.201 ns            5
+BM_gemm_blasfeo_reuse_memory/3/3/3/64_mean            79.1 ns         79.1 ns            5
+BM_gemm_blasfeo_reuse_memory/3/3/3/64_median          79.2 ns         79.1 ns            5
+BM_gemm_blasfeo_reuse_memory/3/3/3/64_stddev         0.142 ns        0.141 ns            5
+BM_gemm_blasfeo_reuse_memory/5/5/5/64_mean            2648 ns         2647 ns            5
+BM_gemm_blasfeo_reuse_memory/5/5/5/64_median          2648 ns         2646 ns            5
+BM_gemm_blasfeo_reuse_memory/5/5/5/64_stddev          2.08 ns         2.12 ns            5
+BM_gemm_blasfeo_reuse_memory/10/10/10/64_mean         2759 ns         2757 ns            5
+BM_gemm_blasfeo_reuse_memory/10/10/10/64_median       2756 ns         2755 ns            5
+BM_gemm_blasfeo_reuse_memory/10/10/10/64_stddev       7.56 ns         7.56 ns            5
+BM_gemm_blasfeo_reuse_memory/20/20/20/64_mean          485 ns          484 ns            5
+BM_gemm_blasfeo_reuse_memory/20/20/20/64_median        483 ns          483 ns            5
+BM_gemm_blasfeo_reuse_memory/20/20/20/64_stddev       2.90 ns         2.91 ns            5
+BM_gemm_blasfeo_reuse_memory/30/30/30/64_mean         1595 ns         1594 ns            5
+BM_gemm_blasfeo_reuse_memory/30/30/30/64_median       1597 ns         1596 ns            5
+BM_gemm_blasfeo_reuse_memory/30/30/30/64_stddev       5.78 ns         5.75 ns            5
+BM_gemm_cblas/2/2/2_mean                               257 ns          257 ns            5
+BM_gemm_cblas/2/2/2_median                             256 ns          256 ns            5
+BM_gemm_cblas/2/2/2_stddev                            2.96 ns         2.95 ns            5
+BM_gemm_cblas/3/3/3_mean                               253 ns          253 ns            5
+BM_gemm_cblas/3/3/3_median                             253 ns          253 ns            5
+BM_gemm_cblas/3/3/3_stddev                           0.583 ns        0.579 ns            5
+BM_gemm_cblas/5/5/5_mean                               266 ns          265 ns            5
+BM_gemm_cblas/5/5/5_median                             266 ns          266 ns            5
+BM_gemm_cblas/5/5/5_stddev                            1.18 ns         1.17 ns            5
+BM_gemm_cblas/10/10/10_mean                            379 ns          378 ns            5
+BM_gemm_cblas/10/10/10_median                          379 ns          379 ns            5
+BM_gemm_cblas/10/10/10_stddev                         1.56 ns         1.54 ns            5
+BM_gemm_cblas/20/20/20_mean                            819 ns          818 ns            5
+BM_gemm_cblas/20/20/20_median                          820 ns          819 ns            5
+BM_gemm_cblas/20/20/20_stddev                         3.54 ns         3.49 ns            5
+BM_gemm_cblas/30/30/30_mean                           1820 ns         1819 ns            5
+BM_gemm_cblas/30/30/30_median                         1822 ns         1821 ns            5
+BM_gemm_cblas/30/30/30_stddev                         13.1 ns         12.9 ns            5
+BM_gemm_blas/2/2/2_mean                                228 ns          228 ns            5
+BM_gemm_blas/2/2/2_median                              228 ns          228 ns            5
+BM_gemm_blas/2/2/2_stddev                            0.621 ns        0.611 ns            5
+BM_gemm_blas/3/3/3_mean                                230 ns          230 ns            5
+BM_gemm_blas/3/3/3_median                              230 ns          230 ns            5
+BM_gemm_blas/3/3/3_stddev                            0.478 ns        0.472 ns            5
+BM_gemm_blas/5/5/5_mean                                245 ns          245 ns            5
+BM_gemm_blas/5/5/5_median                              245 ns          244 ns            5
+BM_gemm_blas/5/5/5_stddev                             1.04 ns         1.03 ns            5
+BM_gemm_blas/10/10/10_mean                             352 ns          352 ns            5
+BM_gemm_blas/10/10/10_median                           352 ns          352 ns            5
+BM_gemm_blas/10/10/10_stddev                          1.45 ns         1.44 ns            5
+BM_gemm_blas/20/20/20_mean                             792 ns          792 ns            5
+BM_gemm_blas/20/20/20_median                           792 ns          792 ns            5
+BM_gemm_blas/20/20/20_stddev                          2.23 ns         2.21 ns            5
+BM_gemm_blas/30/30/30_mean                            1773 ns         1772 ns            5
+BM_gemm_blas/30/30/30_median                          1775 ns         1773 ns            5
+BM_gemm_blas/30/30/30_stddev                          6.13 ns         6.05 ns            5
