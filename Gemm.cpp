@@ -40,8 +40,8 @@ namespace tmpc :: benchmark
 
 	static void randomize(size_t m, size_t n, blasfeo_dmat * A)
 	{
-		std::random_device rd;	//Will be used to obtain a seed for the random number engine
-		std::mt19937 gen(rd()); //Standard mersenne_twister_engine seeded with rd()
+		std::random_device rd; // Will be used to obtain a seed for the random number engine
+		std::mt19937 gen(rd()); // Standard mersenne_twister_engine seeded with rd()
 		std::uniform_real_distribution<> dis(-1.0, 1.0);
 
 		for (size_t i = 0; i < m; ++i)
@@ -52,8 +52,8 @@ namespace tmpc :: benchmark
 
 	static void randomize(size_t m, size_t n, double * A)
 	{
-		std::random_device rd;	//Will be used to obtain a seed for the random number engine
-		std::mt19937 gen(rd()); //Standard mersenne_twister_engine seeded with rd()
+		std::random_device rd; // Will be used to obtain a seed for the random number engine
+		std::mt19937 gen(rd()); // Standard mersenne_twister_engine seeded with rd()
 		std::uniform_real_distribution<> dis(-1.0, 1.0);
 
 		for (size_t i = 0; i < m; ++i)
