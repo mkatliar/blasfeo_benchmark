@@ -27,7 +27,7 @@ To compile the benchmark, just run
 make
 ```
 
-If you already installed Google Benchmarks manually you can run just
+If you already all dependencies manually you can run just
 ```
 make bench
 ```
