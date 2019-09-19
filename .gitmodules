@@ -1,0 +1,6 @@
+[submodule "benchmark"]
+	path = benchmark
+	url = https://github.com/google/benchmark.git
+[submodule "blasfeo"]
+	path = blasfeo
+	url = https://github.com/giaf/blasfeo.git
