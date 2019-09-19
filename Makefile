@@ -25,6 +25,12 @@ bench: Gemm.cpp Main.cpp
 		-L./blasfeo/lib \
 		Gemm.cpp Main.cpp -lbenchmark -lblasfeo -lpthread -l$(BLAS_LIB) -o bench
 
+run:
+	./bench
+
+run_statistics:
+	./bench --benchmark_report_aggregates_only=true --benchmark_repetitions=5
+
 clean:
 	rm -f bench
 
