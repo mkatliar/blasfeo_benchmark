@@ -42,7 +42,7 @@ namespace tmpc :: benchmark
     {
         std::random_device rd;  //Will be used to obtain a seed for the random number engine
 		std::mt19937 gen(rd()); //Standard mersenne_twister_engine seeded with rd()
-		std::uniform_real_distribution<> dis(-1.0, 1.0);	
+		std::uniform_real_distribution<> dis(-1.0, 1.0);
 
         for (size_t i = 0; i < m; ++i)
             for (size_t j = 0; j < n; ++j)
@@ -54,7 +54,7 @@ namespace tmpc :: benchmark
     {
         std::random_device rd;  //Will be used to obtain a seed for the random number engine
 		std::mt19937 gen(rd()); //Standard mersenne_twister_engine seeded with rd()
-		std::uniform_real_distribution<> dis(-1.0, 1.0);	
+		std::uniform_real_distribution<> dis(-1.0, 1.0);
 
         for (size_t i = 0; i < m; ++i)
             for (size_t j = 0; j < n; ++j)
@@ -141,12 +141,12 @@ namespace tmpc :: benchmark
         randomize(m, n, &C);
 
         for (auto _ : state)
-            blasfeo_dgemm_tn(m, n, k, 
-                1.0, 
-                &A, 0, 0, 
-                &B, 0, 0, 
-                1.0, 
-                &C, 0, 0, 
+            blasfeo_dgemm_tn(m, n, k,
+                1.0,
+                &A, 0, 0,
+                &B, 0, 0,
+                1.0,
+                &C, 0, 0,
                 &D, 0, 0);
     }
 
@@ -186,12 +186,12 @@ namespace tmpc :: benchmark
         randomize(m, n, &C);
 
         for (auto _ : state)
-            blasfeo_dgemm_tn(m, n, k, 
-                1.0, 
-                &A, 0, 0, 
-                &B, 0, 0, 
-                1.0, 
-                &C, 0, 0, 
+            blasfeo_dgemm_tn(m, n, k,
+                1.0,
+                &A, 0, 0,
+                &B, 0, 0,
+                1.0,
+                &C, 0, 0,
                 &D, 0, 0);
     }
 
@@ -215,8 +215,8 @@ namespace tmpc :: benchmark
 		    1.0, A.get(), k, B.get(), k, 1.0, C.get(), m);
 
     }
-	
-	
+
+
     static void BM_gemm_blas(::benchmark::State& state)
     {
         int const m = state.range(0);
@@ -240,7 +240,7 @@ namespace tmpc :: benchmark
             dgemm_(&trans_A, &trans_B, &m, &n, &k, &alpha, A.get(), &k, B.get(), &k, &beta, C.get(), &m);
     }
 
-    
+
     BENCHMARK(BM_gemm_blasfeo)
         ->Args({2, 2, 2, 0x40})
         ->Args({3, 3, 3, 0x40})
