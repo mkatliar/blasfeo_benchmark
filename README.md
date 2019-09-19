@@ -1,5 +1,5 @@
 # blasfeo_benchmark
-Benchmarks for investigating the [BLASFEO unstable run-time issue](https://github.com/giaf/blasfeo/issues/103).
+Benchmarks for investigating the [BLASFEO Unpredictable execution time](https://github.com/giaf/blasfeo/issues/103).
 
 ## Dependencies
 

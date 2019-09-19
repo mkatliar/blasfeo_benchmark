@@ -2,7 +2,7 @@
 # BLAS_LIB = openblas
 BLAS_LIB = mkl_rt
 
-# MKL need in archlinux
+# Needed for MKL in archlinux
 BLAS_PATH=/opt/intel/compilers_and_libraries_2019.5.281/linux/mkl/lib/intel64_lin/
 
 all: google_benchmark_local blasfeo_local bench
@@ -18,7 +18,7 @@ blasfeo_local:
 bench: Gemm.cpp Main.cpp
 	g++ -std=c++17 -g -O2 -DNDEBUG \
 		-I./benchmark/include \
-		-L$(BLAS_PATH) \
+		-L$(MKL_PATH) \
 		-I./benchmark/include \
 		-L./benchmark/build/src \
 		-I./blasfeo/include \
