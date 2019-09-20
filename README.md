@@ -6,7 +6,15 @@ Benchmarks for investigating the [BLASFEO Unpredictable execution time](https://
 ### Google benchmarks
 If you want to install it manually clone the [repository](https://github.com/google/benchmark.git).
 and follow the instructions.
-Otherwise it will be automatically added as submodule by the Makefile
+Otherwise it will be automatically added as submodule by the Makefile.
+
+Don't forget to specify `-DCMAKE_BUILD_TYPE=Release` when building the benchmark library manually.
+If you see the following warning when running a benchmark
+```
+***WARNING*** Library was built as DEBUG. Timings may be affected. 
+```
+it means that you didn't do it.
+
 
 ### BLASFEO
 If you want to install it manually clone the [repository](https://github.com/giaf/blasfeo.git).
@@ -23,22 +31,31 @@ See your distribution documentation
 
 ## Build and run
 To compile the benchmark, just run
-```
+```bash
 make
 ```
 
 If you already all dependencies manually you can run just
-```
+```bash
 make bench
 ```
 
-To run the google-based benchmark, run
+Before running the benchmark, disable CPU scaling by the following command:
+```bash
+sudo cpupower frequency-set -g performance
 ```
+otherwise you will see this message:
+```
+***WARNING*** CPU scaling is enabled, the benchmark real time measurements may be noisy and will incur extra overhead.
+```
+
+To run the google-based benchmark, run
+```bash
 ./bench
 ```
 
 To see more options, run
-```
+```bash
 ./bench --help
 ```
 

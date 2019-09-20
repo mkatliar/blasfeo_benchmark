@@ -9,7 +9,7 @@ all: google_benchmark_local blasfeo_local bench
 
 google_benchmark_local:
 	git submodule update --init --recursive
-	cd benchmark; mkdir -p build; cd build; cmake -DBENCHMARK_ENABLE_TESTING=0 ..; make -j4
+	cd benchmark; mkdir -p build; cd build; cmake -DCMAKE_BUILD_TYPE=Release -DBENCHMARK_ENABLE_TESTING=0 ..; make -j4
 
 blasfeo_local:
 	git submodule update --init --recursive
