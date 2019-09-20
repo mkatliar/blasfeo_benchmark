@@ -3,7 +3,7 @@
 BLAS_LIB = mkl_rt
 
 # Needed for MKL in archlinux
-BLAS_PATH=/opt/intel/compilers_and_libraries_2019.5.281/linux/mkl/lib/intel64_lin/
+MKL_PATH=/opt/intel/compilers_and_libraries_2019.5.281/linux/mkl/lib/intel64_lin/
 
 all: google_benchmark_local blasfeo_local bench
 
