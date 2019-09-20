@@ -12,6 +12,7 @@
 #include <map>
 #include <iostream>
 
+#define FORWARD 0
 
 extern "C"
 {
@@ -186,7 +187,7 @@ namespace tmpc :: benchmark
 		randomize(m, n, &C);
 
 		for (auto _ : state)
-			blasfeo_dgemm_tn(m, n, k,
+			blasfeo_dgemm_nn(m, n, k,
 				1.0,
 				&A, 0, 0,
 				&B, 0, 0,
@@ -241,6 +242,7 @@ namespace tmpc :: benchmark
 	}
 
 
+#if FORWARD
 	BENCHMARK(BM_gemm_blasfeo)
 		->Args({2, 2, 2, 0x40})
 		->Args({3, 3, 3, 0x40})
@@ -254,9 +256,23 @@ namespace tmpc :: benchmark
 		->Args({10, 10, 10, 0x1000})
 		->Args({20, 20, 20, 0x1000})
 		->Args({30, 30, 30, 0x1000});
+#else
+	BENCHMARK(BM_gemm_blasfeo)
+		->Args({30, 30, 30, 0x1000})
+		->Args({20, 20, 20, 0x1000})
+		->Args({10, 10, 10, 0x1000})
+		->Args({5, 5, 5, 0x1000})
+		->Args({3, 3, 3, 0x1000})
+		->Args({2, 2, 2, 0x1000})
+		->Args({30, 30, 30, 0x40})
+		->Args({20, 20, 20, 0x40})
+		->Args({10, 10, 10, 0x40})
+		->Args({5, 5, 5, 0x40})
+		->Args({3, 3, 3, 0x40})
+		->Args({2, 2, 2, 0x40});
+#endif
 
-
-#if 1
+#if FORWARD
 	// Run benchmarks in normal order
 	BENCHMARK(BM_gemm_blasfeo_reuse_memory)
 		->Args({2, 2, 2, 0x40})
