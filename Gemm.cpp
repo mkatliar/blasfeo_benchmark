@@ -1,7 +1,7 @@
 #include <blasfeo_d_aux.h>
-#include <blasfeo_s_aux.h>
 #include <blasfeo_d_blas.h>
-#include <blasfeo_s_blas.h>
+#include <blasfeo_d_aux_ext_dep.h>
+#include <blasfeo_stdlib.h>
 
 #include <cblas.h>
 
@@ -69,15 +69,16 @@ static auto alignedAlloc(size_t bytes, size_t alignment)
 }
 
 
-// Allocates, holds and and frees memory chunks required by the benchmark.
-struct Mem
+// Allocates, holds and and frees memory chunks required by the benchmark
+// using aligned_alloc() and blasfeo_memsize_dmat(). 
+struct AlignedAllocMem
 {
 	// Disable copying
-	Mem(Mem const&) = delete;
+	AlignedAllocMem(AlignedAllocMem const&) = delete;
 
 
 	// Move constructor
-	Mem(Mem&& rhs)
+	AlignedAllocMem(AlignedAllocMem&& rhs)
 	:	A_(rhs.A_)
 	,	B_(rhs.B_)
 	,	C_(rhs.C_)
@@ -87,7 +88,7 @@ struct Mem
 	}
 
 
-	Mem(size_t m, size_t n, size_t k, size_t alignment)
+	AlignedAllocMem(size_t m, size_t n, size_t k, size_t alignment)
 	:	A_(aligned_alloc(alignment, blasfeo_memsize_dmat(k, m)))
 	,	B_(aligned_alloc(alignment, blasfeo_memsize_dmat(k, n)))
 	,	C_(aligned_alloc(alignment, blasfeo_memsize_dmat(m, n)))
@@ -96,7 +97,7 @@ struct Mem
 	}
 
 
-	~Mem()
+	~AlignedAllocMem()
 	{
 		free(D_);
 		free(C_);
@@ -112,12 +113,57 @@ struct Mem
 };
 
 
-inline std::ostream& operator<<(std::ostream& os, Mem const& mem)
+inline std::ostream& operator<<(std::ostream& os, AlignedAllocMem const& mem)
 {
 	return os << "A: " << mem.A_ << "\tB: " << mem.B_ << "\tC: " << mem.C_ << "\tD: " << mem.D_;
 }
 
 
+// Allocates, holds and and frees memory chunks required by the benchmark
+// using blasfeo_malloc_align() and blasfeo_memsize_dmat(). 
+struct BlasfeoMallocAlignMem
+{
+	// Disable copying
+	BlasfeoMallocAlignMem(BlasfeoMallocAlignMem const&) = delete;
+
+
+	// Move constructor
+	BlasfeoMallocAlignMem(BlasfeoMallocAlignMem&& rhs)
+	:	A_(rhs.A_)
+	,	B_(rhs.B_)
+	,	C_(rhs.C_)
+	,	D_(rhs.D_)
+	{
+		rhs.A_ = rhs.B_ = rhs.C_ = rhs.D_ = nullptr;
+	}
+
+
+	BlasfeoMallocAlignMem(size_t m, size_t n, size_t k, size_t alignment)
+	{
+		blasfeo_malloc_align(&A_, blasfeo_memsize_dmat(k, m));
+		blasfeo_malloc_align(&B_, blasfeo_memsize_dmat(k, n));
+		blasfeo_malloc_align(&C_, blasfeo_memsize_dmat(m, n));
+		blasfeo_malloc_align(&D_, blasfeo_memsize_dmat(m, n));
+	}
+
+
+	~BlasfeoMallocAlignMem()
+	{
+		blasfeo_free_align(D_);
+		blasfeo_free_align(C_);
+		blasfeo_free_align(B_);
+		blasfeo_free_align(A_);
+	}
+
+
+	void * A_ = nullptr;
+	void * B_ = nullptr;
+	void * C_ = nullptr;
+	void * D_ = nullptr;
+};
+
+
+template <typename Alloc>
 static void BM_gemm_blasfeo(::benchmark::State& state)
 {
 	size_t const m = state.range(0);
@@ -125,7 +171,7 @@ static void BM_gemm_blasfeo(::benchmark::State& state)
 	size_t const k = state.range(2);
 	size_t const alignment = state.range(3);
 
-	Mem mem(m, n, k, alignment);
+	Alloc mem(m, n, k, alignment);
 
 	// std::cout << "Benchmark size " << m << ", " << n << ", " << k << std::endl;
 	// std::cout << "Allocated memory pointers " << mem << std::endl;
@@ -151,6 +197,7 @@ static void BM_gemm_blasfeo(::benchmark::State& state)
 }
 
 
+template <typename Alloc>
 static void BM_gemm_blasfeo_reuse_memory(::benchmark::State& state)
 {
 	size_t const m = state.range(0);
@@ -164,13 +211,13 @@ static void BM_gemm_blasfeo_reuse_memory(::benchmark::State& state)
 
 	// Map from settings to memory chunks
 	// (persistent between function calls due to static)
-	static std::map<Settings, Mem> mem_map;
+	static std::map<Settings, Alloc> mem_map;
 
 	// Check if we have already allocated memory for these settings
 	auto mem = mem_map.find(settings);
 	if (mem == mem_map.end())
 		// Allocate memory chunks if not already allocated
-		mem = mem_map.emplace(settings, Mem(m, n, k, alignment)).first;
+		mem = mem_map.emplace(settings, Alloc(m, n, k, alignment)).first;
 
 	// std::cout << "Benchmark size " << m << ", " << n << ", " << k << std::endl;
 	// std::cout << "Allocated memory pointers " << mem << std::endl;
@@ -241,7 +288,22 @@ static void BM_gemm_blas(::benchmark::State& state)
 }
 
 
-BENCHMARK(BM_gemm_blasfeo)
+BENCHMARK_TEMPLATE(BM_gemm_blasfeo, AlignedAllocMem)
+	->Args({2, 2, 2, 0x40})
+	->Args({3, 3, 3, 0x40})
+	->Args({5, 5, 5, 0x40})
+	->Args({10, 10, 10, 0x40})
+	->Args({20, 20, 20, 0x40})
+	->Args({30, 30, 30, 0x40})
+	->Args({2, 2, 2, 0x1000})
+	->Args({3, 3, 3, 0x1000})
+	->Args({5, 5, 5, 0x1000})
+	->Args({10, 10, 10, 0x1000})
+	->Args({20, 20, 20, 0x1000})
+	->Args({30, 30, 30, 0x1000});
+
+
+BENCHMARK_TEMPLATE(BM_gemm_blasfeo, BlasfeoMallocAlignMem)
 	->Args({2, 2, 2, 0x40})
 	->Args({3, 3, 3, 0x40})
 	->Args({5, 5, 5, 0x40})
@@ -258,7 +320,15 @@ BENCHMARK(BM_gemm_blasfeo)
 
 #if 1
 // Run benchmarks in normal order
-BENCHMARK(BM_gemm_blasfeo_reuse_memory)
+BENCHMARK_TEMPLATE(BM_gemm_blasfeo_reuse_memory, AlignedAllocMem)
+	->Args({2, 2, 2, 0x40})
+	->Args({3, 3, 3, 0x40})
+	->Args({5, 5, 5, 0x40})
+	->Args({10, 10, 10, 0x40})
+	->Args({20, 20, 20, 0x40})
+	->Args({30, 30, 30, 0x40});
+
+BENCHMARK_TEMPLATE(BM_gemm_blasfeo_reuse_memory, BlasfeoMallocAlignMem)
 	->Args({2, 2, 2, 0x40})
 	->Args({3, 3, 3, 0x40})
 	->Args({5, 5, 5, 0x40})
@@ -267,7 +337,15 @@ BENCHMARK(BM_gemm_blasfeo_reuse_memory)
 	->Args({30, 30, 30, 0x40});
 #else
 // Run benchmarks in reverse order
-BENCHMARK(BM_gemm_blasfeo_reuse_memory)
+BENCHMARK_TEMPLATE(BM_gemm_blasfeo_reuse_memory, AlignedAllocMem)
+	->Args({30, 30, 30, 0x40})
+	->Args({20, 20, 20, 0x40})
+	->Args({10, 10, 10, 0x40})
+	->Args({5, 5, 5, 0x40})
+	->Args({3, 3, 3, 0x40})
+	->Args({2, 2, 2, 0x40});
+
+BENCHMARK_TEMPLATE(BM_gemm_blasfeo_reuse_memory, BlasfeoMallocAlignMem)
 	->Args({30, 30, 30, 0x40})
 	->Args({20, 20, 20, 0x40})
 	->Args({10, 10, 10, 0x40})
