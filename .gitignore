@@ -1,2 +1,3 @@
 .vscode/*
+.*.sw[a-z]
 bench

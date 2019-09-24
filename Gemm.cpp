@@ -15,6 +15,8 @@
 #include <stdlib.h>
 
 
+#define FORWARD 0
+
 extern "C"
 {
 	void dgemm_(
@@ -241,6 +243,8 @@ static void BM_gemm_blas(::benchmark::State& state)
 }
 
 
+#if FORWARD
+
 BENCHMARK(BM_gemm_blasfeo)
 	->Args({2, 2, 2, 0x40})
 	->Args({3, 3, 3, 0x40})
@@ -254,9 +258,24 @@ BENCHMARK(BM_gemm_blasfeo)
 	->Args({10, 10, 10, 0x1000})
 	->Args({20, 20, 20, 0x1000})
 	->Args({30, 30, 30, 0x1000});
+#else
+	BENCHMARK(BM_gemm_blasfeo)
+		->Args({30, 30, 30, 0x1000})
+		->Args({20, 20, 20, 0x1000})
+		->Args({10, 10, 10, 0x1000})
+		->Args({5, 5, 5, 0x1000})
+		->Args({3, 3, 3, 0x1000})
+		->Args({2, 2, 2, 0x1000})
+		->Args({30, 30, 30, 0x40})
+		->Args({20, 20, 20, 0x40})
+		->Args({10, 10, 10, 0x40})
+		->Args({5, 5, 5, 0x40})
+		->Args({3, 3, 3, 0x40})
+		->Args({2, 2, 2, 0x40});
+#endif
 
+#if FORWARD
 
-#if 1
 // Run benchmarks in normal order
 BENCHMARK(BM_gemm_blasfeo_reuse_memory)
 	->Args({2, 2, 2, 0x40})
