@@ -15,6 +15,8 @@
 #include <stdlib.h>
 
 
+#define FORWARD 0
+
 extern "C"
 {
 	void dgemm_(
@@ -288,6 +290,8 @@ static void BM_gemm_blas(::benchmark::State& state)
 }
 
 
+#if FORWARD
+
 BENCHMARK_TEMPLATE(BM_gemm_blasfeo, AlignedAllocMem)
 	->Args({2, 2, 2, 0x40})
 	->Args({3, 3, 3, 0x40})
@@ -316,10 +320,39 @@ BENCHMARK_TEMPLATE(BM_gemm_blasfeo, BlasfeoMallocAlignMem)
 	->Args({10, 10, 10, 0x1000})
 	->Args({20, 20, 20, 0x1000})
 	->Args({30, 30, 30, 0x1000});
+#else
+	BENCHMARK_TEMPLATE(BM_gemm_blasfeo, AlignedAllocMem)
+		->Args({30, 30, 30, 0x1000})
+		->Args({20, 20, 20, 0x1000})
+		->Args({10, 10, 10, 0x1000})
+		->Args({5, 5, 5, 0x1000})
+		->Args({3, 3, 3, 0x1000})
+		->Args({2, 2, 2, 0x1000})
+		->Args({30, 30, 30, 0x40})
+		->Args({20, 20, 20, 0x40})
+		->Args({10, 10, 10, 0x40})
+		->Args({5, 5, 5, 0x40})
+		->Args({3, 3, 3, 0x40})
+		->Args({2, 2, 2, 0x40});
+		
+	BENCHMARK_TEMPLATE(BM_gemm_blasfeo, BlasfeoMallocAlignMem)
+		->Args({30, 30, 30, 0x1000})
+		->Args({20, 20, 20, 0x1000})
+		->Args({10, 10, 10, 0x1000})
+		->Args({5, 5, 5, 0x1000})
+		->Args({3, 3, 3, 0x1000})
+		->Args({2, 2, 2, 0x1000})
+		->Args({30, 30, 30, 0x40})
+		->Args({20, 20, 20, 0x40})
+		->Args({10, 10, 10, 0x40})
+		->Args({5, 5, 5, 0x40})
+		->Args({3, 3, 3, 0x40})
+		->Args({2, 2, 2, 0x40});
+#endif
 
-
-#if 1
+#if FORWARD
 // Run benchmarks in normal order
+
 BENCHMARK_TEMPLATE(BM_gemm_blasfeo_reuse_memory, AlignedAllocMem)
 	->Args({2, 2, 2, 0x40})
 	->Args({3, 3, 3, 0x40})
@@ -335,8 +368,10 @@ BENCHMARK_TEMPLATE(BM_gemm_blasfeo_reuse_memory, BlasfeoMallocAlignMem)
 	->Args({10, 10, 10, 0x40})
 	->Args({20, 20, 20, 0x40})
 	->Args({30, 30, 30, 0x40});
+
 #else
 // Run benchmarks in reverse order
+
 BENCHMARK_TEMPLATE(BM_gemm_blasfeo_reuse_memory, AlignedAllocMem)
 	->Args({30, 30, 30, 0x40})
 	->Args({20, 20, 20, 0x40})
