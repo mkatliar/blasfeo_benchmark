@@ -290,9 +290,24 @@ static void BM_gemm_blas(::benchmark::State& state)
 }
 
 
+static double computeMin(const std::vector<double>& v)
+{
+	return *min_element(begin(v), end(v));
+}
+
+
+static double computeMax(const std::vector<double>& v)
+{
+	return *max_element(begin(v), end(v));
+}
+
+
+#define COMPUTE_CUSTOM_STATISTICS(bm) bm->ComputeStatistics("min", &computeMin)->ComputeStatistics("max", &computeMax)
+
+
 #if FORWARD
 
-BENCHMARK_TEMPLATE(BM_gemm_blasfeo, AlignedAllocMem)
+COMPUTE_CUSTOM_STATISTICS(BENCHMARK_TEMPLATE(BM_gemm_blasfeo, AlignedAllocMem))
 	->Args({2, 2, 2, 0x40})
 	->Args({3, 3, 3, 0x40})
 	->Args({5, 5, 5, 0x40})
@@ -307,7 +322,7 @@ BENCHMARK_TEMPLATE(BM_gemm_blasfeo, AlignedAllocMem)
 	->Args({30, 30, 30, 0x1000});
 
 
-BENCHMARK_TEMPLATE(BM_gemm_blasfeo, BlasfeoMallocAlignMem)
+COMPUTE_CUSTOM_STATISTICS(BENCHMARK_TEMPLATE(BM_gemm_blasfeo, BlasfeoMallocAlignMem))
 	->Args({2, 2, 2, 0x40})
 	->Args({3, 3, 3, 0x40})
 	->Args({5, 5, 5, 0x40})
@@ -321,39 +336,39 @@ BENCHMARK_TEMPLATE(BM_gemm_blasfeo, BlasfeoMallocAlignMem)
 	->Args({20, 20, 20, 0x1000})
 	->Args({30, 30, 30, 0x1000});
 #else
-	BENCHMARK_TEMPLATE(BM_gemm_blasfeo, AlignedAllocMem)
-		->Args({30, 30, 30, 0x1000})
-		->Args({20, 20, 20, 0x1000})
-		->Args({10, 10, 10, 0x1000})
-		->Args({5, 5, 5, 0x1000})
-		->Args({3, 3, 3, 0x1000})
-		->Args({2, 2, 2, 0x1000})
-		->Args({30, 30, 30, 0x40})
-		->Args({20, 20, 20, 0x40})
-		->Args({10, 10, 10, 0x40})
-		->Args({5, 5, 5, 0x40})
-		->Args({3, 3, 3, 0x40})
-		->Args({2, 2, 2, 0x40});
-		
-	BENCHMARK_TEMPLATE(BM_gemm_blasfeo, BlasfeoMallocAlignMem)
-		->Args({30, 30, 30, 0x1000})
-		->Args({20, 20, 20, 0x1000})
-		->Args({10, 10, 10, 0x1000})
-		->Args({5, 5, 5, 0x1000})
-		->Args({3, 3, 3, 0x1000})
-		->Args({2, 2, 2, 0x1000})
-		->Args({30, 30, 30, 0x40})
-		->Args({20, 20, 20, 0x40})
-		->Args({10, 10, 10, 0x40})
-		->Args({5, 5, 5, 0x40})
-		->Args({3, 3, 3, 0x40})
-		->Args({2, 2, 2, 0x40});
+COMPUTE_CUSTOM_STATISTICS(BENCHMARK_TEMPLATE(BM_gemm_blasfeo, AlignedAllocMem))
+	->Args({30, 30, 30, 0x1000})
+	->Args({20, 20, 20, 0x1000})
+	->Args({10, 10, 10, 0x1000})
+	->Args({5, 5, 5, 0x1000})
+	->Args({3, 3, 3, 0x1000})
+	->Args({2, 2, 2, 0x1000})
+	->Args({30, 30, 30, 0x40})
+	->Args({20, 20, 20, 0x40})
+	->Args({10, 10, 10, 0x40})
+	->Args({5, 5, 5, 0x40})
+	->Args({3, 3, 3, 0x40})
+	->Args({2, 2, 2, 0x40});
+	
+COMPUTE_CUSTOM_STATISTICS(BENCHMARK_TEMPLATE(BM_gemm_blasfeo, BlasfeoMallocAlignMem))
+	->Args({30, 30, 30, 0x1000})
+	->Args({20, 20, 20, 0x1000})
+	->Args({10, 10, 10, 0x1000})
+	->Args({5, 5, 5, 0x1000})
+	->Args({3, 3, 3, 0x1000})
+	->Args({2, 2, 2, 0x1000})
+	->Args({30, 30, 30, 0x40})
+	->Args({20, 20, 20, 0x40})
+	->Args({10, 10, 10, 0x40})
+	->Args({5, 5, 5, 0x40})
+	->Args({3, 3, 3, 0x40})
+	->Args({2, 2, 2, 0x40});
 #endif
 
 #if FORWARD
 // Run benchmarks in normal order
 
-BENCHMARK_TEMPLATE(BM_gemm_blasfeo_reuse_memory, AlignedAllocMem)
+COMPUTE_CUSTOM_STATISTICS(BENCHMARK_TEMPLATE(BM_gemm_blasfeo_reuse_memory, AlignedAllocMem))
 	->Args({2, 2, 2, 0x40})
 	->Args({3, 3, 3, 0x40})
 	->Args({5, 5, 5, 0x40})
@@ -361,7 +376,7 @@ BENCHMARK_TEMPLATE(BM_gemm_blasfeo_reuse_memory, AlignedAllocMem)
 	->Args({20, 20, 20, 0x40})
 	->Args({30, 30, 30, 0x40});
 
-BENCHMARK_TEMPLATE(BM_gemm_blasfeo_reuse_memory, BlasfeoMallocAlignMem)
+COMPUTE_CUSTOM_STATISTICS(BENCHMARK_TEMPLATE(BM_gemm_blasfeo_reuse_memory, BlasfeoMallocAlignMem))
 	->Args({2, 2, 2, 0x40})
 	->Args({3, 3, 3, 0x40})
 	->Args({5, 5, 5, 0x40})
@@ -372,7 +387,7 @@ BENCHMARK_TEMPLATE(BM_gemm_blasfeo_reuse_memory, BlasfeoMallocAlignMem)
 #else
 // Run benchmarks in reverse order
 
-BENCHMARK_TEMPLATE(BM_gemm_blasfeo_reuse_memory, AlignedAllocMem)
+COMPUTE_CUSTOM_STATISTICS(BENCHMARK_TEMPLATE(BM_gemm_blasfeo_reuse_memory, AlignedAllocMem))
 	->Args({30, 30, 30, 0x40})
 	->Args({20, 20, 20, 0x40})
 	->Args({10, 10, 10, 0x40})
@@ -380,7 +395,7 @@ BENCHMARK_TEMPLATE(BM_gemm_blasfeo_reuse_memory, AlignedAllocMem)
 	->Args({3, 3, 3, 0x40})
 	->Args({2, 2, 2, 0x40});
 
-BENCHMARK_TEMPLATE(BM_gemm_blasfeo_reuse_memory, BlasfeoMallocAlignMem)
+COMPUTE_CUSTOM_STATISTICS(BENCHMARK_TEMPLATE(BM_gemm_blasfeo_reuse_memory, BlasfeoMallocAlignMem))
 	->Args({30, 30, 30, 0x40})
 	->Args({20, 20, 20, 0x40})
 	->Args({10, 10, 10, 0x40})
@@ -390,7 +405,7 @@ BENCHMARK_TEMPLATE(BM_gemm_blasfeo_reuse_memory, BlasfeoMallocAlignMem)
 #endif
 
 
-BENCHMARK(BM_gemm_cblas)
+COMPUTE_CUSTOM_STATISTICS(BENCHMARK(BM_gemm_cblas))
 	->Args({2, 2, 2})
 	->Args({3, 3, 3})
 	->Args({5, 5, 5})
@@ -399,7 +414,7 @@ BENCHMARK(BM_gemm_cblas)
 	->Args({30, 30, 30});
 
 
-BENCHMARK(BM_gemm_blas)
+COMPUTE_CUSTOM_STATISTICS(BENCHMARK(BM_gemm_blas))
 	->Args({2, 2, 2})
 	->Args({3, 3, 3})
 	->Args({5, 5, 5})
