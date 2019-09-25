@@ -11,11 +11,12 @@
 #include <memory>
 #include <map>
 #include <iostream>
+#include <cstring>
 
 #include <stdlib.h>
 
 
-#define FORWARD 0
+#define FORWARD 1
 
 extern "C"
 {
@@ -100,6 +101,61 @@ struct AlignedAllocMem
 
 
 	~AlignedAllocMem()
+	{
+		free(D_);
+		free(C_);
+		free(B_);
+		free(A_);
+	}
+
+
+	void * A_ = nullptr;
+	void * B_ = nullptr;
+	void * C_ = nullptr;
+	void * D_ = nullptr;
+};
+
+
+// Allocates, holds and and frees memory chunks required by the benchmark
+// using aligned_alloc() and blasfeo_memsize_dmat().
+// Initializes allocated memory with zeros!
+struct AlignedAllocZeroMem
+{
+	// Disable copying
+	AlignedAllocZeroMem(AlignedAllocZeroMem const&) = delete;
+
+
+	// Move constructor
+	AlignedAllocZeroMem(AlignedAllocZeroMem&& rhs)
+	:	A_(rhs.A_)
+	,	B_(rhs.B_)
+	,	C_(rhs.C_)
+	,	D_(rhs.D_)
+	{
+		rhs.A_ = rhs.B_ = rhs.C_ = rhs.D_ = nullptr;
+	}
+
+
+	AlignedAllocZeroMem(size_t m, size_t n, size_t k, size_t alignment)
+	{
+		size_t const size_A = blasfeo_memsize_dmat(k, m);
+		size_t const size_B = blasfeo_memsize_dmat(k, n);
+		size_t const size_C = blasfeo_memsize_dmat(m, n);
+		size_t const size_D = blasfeo_memsize_dmat(m, n);
+
+		A_ = aligned_alloc(alignment, size_A);
+		B_ = aligned_alloc(alignment, size_B);
+		C_ = aligned_alloc(alignment, size_C);
+		D_ = aligned_alloc(alignment, size_D);
+
+		memset(A_, 0, size_A);
+		memset(B_, 0, size_B);
+		memset(C_, 0, size_C);
+		memset(D_, 0, size_D);
+	}
+
+
+	~AlignedAllocZeroMem()
 	{
 		free(D_);
 		free(C_);
@@ -322,6 +378,21 @@ COMPUTE_CUSTOM_STATISTICS(BENCHMARK_TEMPLATE(BM_gemm_blasfeo, AlignedAllocMem))
 	->Args({30, 30, 30, 0x1000});
 
 
+COMPUTE_CUSTOM_STATISTICS(BENCHMARK_TEMPLATE(BM_gemm_blasfeo, AlignedAllocZeroMem))
+	->Args({2, 2, 2, 0x40})
+	->Args({3, 3, 3, 0x40})
+	->Args({5, 5, 5, 0x40})
+	->Args({10, 10, 10, 0x40})
+	->Args({20, 20, 20, 0x40})
+	->Args({30, 30, 30, 0x40})
+	->Args({2, 2, 2, 0x1000})
+	->Args({3, 3, 3, 0x1000})
+	->Args({5, 5, 5, 0x1000})
+	->Args({10, 10, 10, 0x1000})
+	->Args({20, 20, 20, 0x1000})
+	->Args({30, 30, 30, 0x1000});
+
+
 COMPUTE_CUSTOM_STATISTICS(BENCHMARK_TEMPLATE(BM_gemm_blasfeo, BlasfeoMallocAlignMem))
 	->Args({2, 2, 2, 0x40})
 	->Args({3, 3, 3, 0x40})
@@ -337,6 +408,20 @@ COMPUTE_CUSTOM_STATISTICS(BENCHMARK_TEMPLATE(BM_gemm_blasfeo, BlasfeoMallocAlign
 	->Args({30, 30, 30, 0x1000});
 #else
 COMPUTE_CUSTOM_STATISTICS(BENCHMARK_TEMPLATE(BM_gemm_blasfeo, AlignedAllocMem))
+	->Args({30, 30, 30, 0x1000})
+	->Args({20, 20, 20, 0x1000})
+	->Args({10, 10, 10, 0x1000})
+	->Args({5, 5, 5, 0x1000})
+	->Args({3, 3, 3, 0x1000})
+	->Args({2, 2, 2, 0x1000})
+	->Args({30, 30, 30, 0x40})
+	->Args({20, 20, 20, 0x40})
+	->Args({10, 10, 10, 0x40})
+	->Args({5, 5, 5, 0x40})
+	->Args({3, 3, 3, 0x40})
+	->Args({2, 2, 2, 0x40});
+
+COMPUTE_CUSTOM_STATISTICS(BENCHMARK_TEMPLATE(BM_gemm_blasfeo, AlignedAllocZeroMem))
 	->Args({30, 30, 30, 0x1000})
 	->Args({20, 20, 20, 0x1000})
 	->Args({10, 10, 10, 0x1000})
